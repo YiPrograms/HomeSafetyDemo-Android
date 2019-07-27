@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Home Safety Demo</string>
+    <string name="tab_home_text">Home</string>
+    <string name="tab_alerts_text">Alerts</string>
+    <string name="tab_status_text">Status</string>
+    <string name="tab_about_text">About</string>
+    <string name="home_s1_title">Station 1</string>
+    <string name="home_temp_text">Temperature</string>
+    <string name="home_s2_title">Station 2</string>
+</resources>
