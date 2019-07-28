@@ -8,8 +8,7 @@ import com.yyp.homesafetydemo.*
 
 private val TAB_TITLES = arrayOf(
     R.string.tab_home_text,
-    R.string.tab_alerts_text,
-    R.string.tab_about_text
+    R.string.tab_alerts_text
 )
 
 
@@ -22,8 +21,7 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : 
     override fun getItem(position: Int): Fragment {
         return when(position){
             0 -> HomeActivity()
-            1 -> AlertsActivity()
-            else -> AboutActivity()
+            else -> AlertsActivity()
         }
     }
 
@@ -32,6 +30,6 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) : 
     }
 
     override fun getCount(): Int {
-        return 3
+        return 2
     }
 }
