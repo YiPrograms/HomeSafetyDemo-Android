@@ -7,4 +7,7 @@
     <string name="home_s1_title">Station 1</string>
     <string name="home_temp_text">Temperature</string>
     <string name="home_s2_title">Station 2</string>
+    <string name="home_air_title">Air Sensor</string>
+    <string name="home_online">Online</string>
+    <string name="home_offline">Offline</string>
 </resources>

@@ -45,10 +45,11 @@
                               android:id="@+id/s1_title" android:text="@string/home_s1_title"
                               android:textColor="#FF5722"/>
                     <TextView
-                            android:text="Online"
+                            android:id="@+id/s1_connect"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:id="@+id/s1_connect" android:layout_weight="1"
-                            android:paddingStart="14dp" android:textColor="#4CAF50" android:textSize="18sp"/>
+                            android:layout_height="wrap_content" android:layout_weight="1" android:paddingStart="14dp"
+                            android:text="@string/home_offline" android:textColor="@color/colorOffline"
+                            android:textSize="18sp"/>
                 </LinearLayout>
 
                 <LinearLayout android:layout_width="match_parent"
@@ -76,10 +77,10 @@
                                android:scaleType="fitCenter"
                                android:layout_marginStart="0dp"/>
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                              android:text="90 %" android:layout_marginTop="8dp"
-                              android:layout_marginStart="8dp"
-                              android:textSize="45sp" android:textColor="#03A9F4" android:id="@+id/s1_humid"/>
+                    <TextView android:id="@+id/s1_humid" android:layout_width="wrap_content"
+                              android:layout_height="wrap_content" android:layout_marginStart="8dp"
+                              android:layout_marginTop="8dp"
+                              android:text="-- %" android:textColor="#03A9F4" android:textSize="45sp"/>
 
                 </LinearLayout>
 
@@ -110,10 +111,11 @@
                               android:id="@+id/s2_title" android:text="@string/home_s2_title"
                               android:textColor="#3F51B5"/>
                     <TextView
-                            android:text="Online"
+                            android:id="@+id/s2_connect"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:id="@+id/s2_connect" android:layout_weight="1"
-                            android:paddingStart="14dp" android:textColor="#4CAF50" android:textSize="18sp"/>
+                            android:layout_height="wrap_content" android:layout_weight="1" android:paddingStart="14dp"
+                            android:text="@string/home_offline" android:textColor="@color/colorOffline"
+                            android:textSize="18sp"/>
                 </LinearLayout>
 
                 <LinearLayout android:layout_width="match_parent"
@@ -125,10 +127,10 @@
                                android:scaleType="fitCenter"
                                android:layout_marginStart="0dp"/>
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                              android:text="25°C" android:layout_marginTop="8dp"
-                              android:layout_marginStart="8dp"
-                              android:textSize="45sp" android:textColor="#9C27B0" android:id="@+id/s2_temp"/>
+                    <TextView android:id="@+id/s2_temp" android:layout_width="wrap_content"
+                              android:layout_height="wrap_content" android:layout_marginStart="8dp"
+                              android:layout_marginTop="8dp"
+                              android:text="--°C" android:textColor="#9C27B0" android:textSize="45sp"/>
 
                 </LinearLayout>
 
@@ -141,10 +143,10 @@
                                android:scaleType="fitCenter"
                                android:layout_marginStart="0dp"/>
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                              android:text="90 %" android:layout_marginTop="8dp"
-                              android:layout_marginStart="8dp"
-                              android:textSize="45sp" android:textColor="#03A9F4" android:id="@+id/s2_humid"/>
+                    <TextView android:id="@+id/s2_humid" android:layout_width="wrap_content"
+                              android:layout_height="wrap_content" android:layout_marginStart="8dp"
+                              android:layout_marginTop="8dp"
+                              android:text="-- %" android:textColor="#03A9F4" android:textSize="45sp"/>
 
                 </LinearLayout>
 
@@ -160,7 +162,7 @@
                                            card_view:cardUseCompatPadding="true">
 
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
-                          android:background="@drawable/s1_background"
+                          android:background="@drawable/air_background"
                           android:orientation="vertical">
                 <LinearLayout
                         android:orientation="horizontal"
@@ -169,20 +171,22 @@
                         android:gravity="bottom"
                         android:paddingStart="16dp"
                         android:paddingTop="8dp">
-                    <TextView android:layout_width="wrap_content"
+                    <TextView android:id="@+id/air_title"
+                              android:layout_width="wrap_content"
                               android:layout_height="wrap_content"
-                              android:textSize="36sp"
-                              android:id="@+id/s1_title" android:text="@string/home_s1_title"
-                              android:textColor="#FF5722"/>
+                              android:text="@string/home_air_title" android:textColor="#00BFA5"
+                              android:textSize="36sp"/>
                     <TextView
-                            android:text="Online"
+                            android:id="@+id/air_connect"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:id="@+id/s1_connect" android:layout_weight="1"
-                            android:paddingStart="14dp" android:textColor="#4CAF50" android:textSize="18sp"/>
+                            android:layout_height="wrap_content" android:layout_weight="1" android:paddingStart="14dp"
+                            android:text="@string/home_offline" android:textColor="@color/colorOffline"
+                            android:textSize="18sp"/>
                 </LinearLayout>
 
                 <LinearLayout android:layout_width="match_parent"
                               android:layout_height="wrap_content" android:orientation="horizontal"
+                              android:paddingBottom="8dp"
                               android:gravity="center_horizontal">
 
                     <ImageView android:layout_width="40dp" android:layout_height="40dp"
@@ -190,28 +194,13 @@
                                android:scaleType="fitCenter"
                                android:layout_marginStart="0dp"/>
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                              android:text="25°C" android:layout_marginTop="8dp"
-                              android:layout_marginStart="8dp"
-                              android:textSize="45sp" android:textColor="#9C27B0" android:id="@+id/s1_temp"/>
+                    <TextView android:id="@+id/pm25" android:layout_width="wrap_content"
+                              android:layout_height="wrap_content" android:layout_marginStart="8dp"
+                              android:layout_marginTop="8dp"
+                              android:text="--" android:textColor="#9C27B0" android:textSize="45sp"/>
 
                 </LinearLayout>
 
-                <LinearLayout android:layout_width="match_parent"
-                              android:layout_height="wrap_content" android:orientation="horizontal"
-                              android:gravity="center_horizontal" android:paddingBottom="8dp">
-
-                    <ImageView android:layout_width="40dp" android:layout_height="40dp"
-                               app:srcCompat="@drawable/ic_water_percent" android:layout_marginTop="27dp"
-                               android:scaleType="fitCenter"
-                               android:layout_marginStart="0dp"/>
-
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                              android:text="90 %" android:layout_marginTop="8dp"
-                              android:layout_marginStart="8dp"
-                              android:textSize="45sp" android:textColor="#03A9F4" android:id="@+id/s1_humid"/>
-
-                </LinearLayout>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
