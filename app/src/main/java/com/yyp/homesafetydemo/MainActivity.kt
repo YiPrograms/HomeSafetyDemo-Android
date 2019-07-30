@@ -27,6 +27,10 @@ import okhttp3.*
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import okhttp3.OkHttpClient
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
+import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity() {
@@ -40,48 +44,31 @@ class MainActivity : AppCompatActivity() {
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
 
-        mainHandler = Handler(Looper.getMainLooper())
-    }
-
-    lateinit var mainHandler: Handler
-
-    private val updateTextTask = object : Runnable {
-        override fun run() {
-            updateData()
-            mainHandler.postDelayed(this, 2000)
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mainHandler.removeCallbacks(updateTextTask)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mainHandler.post(updateTextTask)
-    }
-
-
-    var alertLastCount: Int = 0
-
-    fun updateData() {
-        println("Updating Data")
-
-        val url = "http://homesafetydemo.ml:8080/get"
-
+        val url = "ws://homesafetydemo.ml:8080/get"
+        val client = OkHttpClient.Builder().build()
         val request = Request.Builder().url(url).build()
-        val client = OkHttpClient()
 
-        client.newCall(request).enqueue(object : Callback {
 
-            override fun onResponse(call: Call, response: Response) {
-                val body = response.body?.string()
-                println("Success")
-                println(body)
+
+        client.newWebSocket(request, object : WebSocketListener() {
+
+            override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+                println("Failure")
+                println(t.message)
+                try{
+                    client.dispatcher.cancelAll()
+                } catch (e : Exception) {
+                    println(e.message)
+                }
+            }
+
+            override fun onMessage(webSocket: WebSocket, text: String) {
+                println("Message:$text")
+
+                println("Updating Data")
 
                 val gson = GsonBuilder().create()
-                val data = gson.fromJson(body, HomeData::class.java)
+                val data = gson.fromJson(text, HomeData::class.java)
 
                 runOnUiThread {
                     if (data.S1.Humid == -1) {
@@ -116,22 +103,20 @@ class MainActivity : AppCompatActivity() {
                         pm25.text = String.format("%d ug/m³", data.Gas.PM25)
                     }
                 }
-                if (data.Alerts.isEmpty()) {
+                if (data.Alerts?.isEmpty()) {
                     updateList(listOf(Alert("No Alerts", "", -1)))
                 } else {
-                    if (data.Alerts.size != alertLastCount) {
+                    if (data.Alerts?.size != alertLastCount) {
                         updateList(data.Alerts.reversed())
                         alertLastCount = data.Alerts.size
                     }
                 }
             }
 
-            override fun onFailure(call: Call, e: IOException) {
-                println("Failure")
-                println(e.message)
-            }
         })
     }
+
+    var alertLastCount: Int = 0
 
 
     fun updateList(itemList: List<Alert>) {
