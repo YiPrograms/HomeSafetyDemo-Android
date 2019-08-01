@@ -2,6 +2,7 @@ package com.yyp.homesafetydemo
 
 import android.content.ClipData
 import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -16,7 +17,12 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.GsonBuilder
@@ -151,10 +157,10 @@ class ListAdapter(val context: Context?, val alerts: List<Alert>)
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         private val alerttitle = itemView.findViewById<TextView>(R.id.alert_title)
-        //private val alertimage = itemView.findViewById<TextView>(R.id.alert_image)
+        private val alertimage = itemView.findViewById<ImageView>(R.id.alert_image)
         private val alerttime = itemView.findViewById<TextView>(R.id.alert_time)
         private val alertbody = itemView.findViewById<TextView>(R.id.alert_body)
-        //private val alertcard = itemView.findViewById<TextView>(R.id.alert_card)
+        private val alertback = itemView.findViewById<LinearLayout>(R.id.alert_back)
 
         fun bind(alert: Alert) {
             alerttitle.text = alert.Title
@@ -164,6 +170,23 @@ class ListAdapter(val context: Context?, val alerts: List<Alert>)
                 val dt = Date(alert.Time*1000)
                 val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm")
                 alerttime.text = sdf.format(dt)
+            }
+
+            when (alert.Title) {
+                "Smoke" -> {
+                    alertimage.setImageResource(R.drawable.ic_fire)
+                    alertback.background = context?.let { ContextCompat.getDrawable(it, R.drawable.s1_background) }
+                }
+
+                "Bad Air" -> {
+                    alertimage.setImageResource(R.drawable.ic_pm25)
+                    alertback.background = context?.let { ContextCompat.getDrawable(it, R.drawable.air_background) }
+                }
+
+                "Earthquake" -> {
+                    alertimage.setImageResource(R.drawable.ic_earthquake)
+                    alertback.background = context?.let { ContextCompat.getDrawable(it, R.drawable.s2_background) }
+                }
             }
 
         }

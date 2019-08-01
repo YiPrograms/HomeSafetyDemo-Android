@@ -10,14 +10,14 @@
                                    app:cardElevation="6dp">
 
     <LinearLayout
+            android:id="@+id/alert_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/s1_background"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="8dp" android:paddingBottom="8dp">
+            android:paddingTop="8dp" android:paddingEnd="8dp" android:paddingBottom="8dp">
 
         <ImageView
                 android:id="@+id/alert_image"
@@ -26,8 +26,7 @@
                 app:srcCompat="@drawable/ic_water_percent"/>
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content" android:orientation="vertical">
             <TextView
                     android:id="@+id/alert_title"
                     android:layout_width="match_parent"
