@@ -26,6 +26,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.GsonBuilder
+import com.rabtman.wsmanager.WsManager
+import com.rabtman.wsmanager.listener.WsStatusListener
 
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_alerts.*
@@ -36,6 +38,7 @@ import java.util.*
 import okhttp3.OkHttpClient
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
+import okio.ByteString
 import java.lang.Exception
 
 
@@ -52,11 +55,89 @@ class MainActivity : AppCompatActivity() {
 
         val url = "ws://homesafetydemo.ml:8080/get"
         val client = OkHttpClient.Builder().build()
-        val request = Request.Builder().url(url).build()
+        val wsManager = WsManager.Builder(this)
+                .wsUrl(url)
+                .needReconnect(true)
+                .client(client)
+                .build()
+
+        wsManager.setWsStatusListener(object: WsStatusListener() {
+
+            override fun onFailure(t: Throwable?, response: Response?) {
+                println("Failure")
+                println(t?.message)
+                try{
+                    client.dispatcher.cancelAll()
+                } catch (e : Exception) {
+                    println(e.message)
+                }
+            }
+
+            var alertLastCount: Int = 0
 
 
+            fun updateList(itemList: List<Alert>) {
+                runOnUiThread{
+                    alerts_list?.adapter = ListAdapter(applicationContext, itemList)
+                    alerts_list?.layoutManager = LinearLayoutManager(applicationContext)
+                }
+            }
 
-        client.newWebSocket(request, object : WebSocketListener() {
+            override fun onMessage(text: String?) {
+                println("Message:$text")
+
+                println("Updating Data")
+
+                val gson = GsonBuilder().create()
+                val data = gson.fromJson(text, HomeData::class.java)
+
+                runOnUiThread {
+                    if (data.S1.Humid == -1) {
+                        s1_connect.text = getString(R.string.home_offline)
+                        s1_connect.setTextColor(resources.getColor(R.color.colorOffline))
+                        s1_temp.text = "--°C"
+                        s1_humid.text = "-- %"
+                    } else {
+                        s1_connect.text = getString(R.string.home_online)
+                        s1_connect.setTextColor(resources.getColor(R.color.colorOnline))
+                        s1_temp.text = String.format("%d°C", data.S1.Temp)
+                        s1_humid.text = String.format("%d %%", data.S1.Humid)
+                    }
+                    if (data.S2.Humid == -1) {
+                        s2_connect.text = getString(R.string.home_offline)
+                        s2_connect.setTextColor(resources.getColor(R.color.colorOffline))
+                        s2_temp.text = "--°C"
+                        s2_humid.text = "-- %"
+                    } else {
+                        s2_connect.text = getString(R.string.home_online)
+                        s2_connect.setTextColor(resources.getColor(R.color.colorOnline))
+                        s2_temp.text = String.format("%d°C", data.S2.Temp)
+                        s2_humid.text = String.format("%d %%", data.S2.Humid)
+                    }
+                    if (data.Gas.PM25 == -1) {
+                        air_connect.text = getString(R.string.home_offline)
+                        air_connect.setTextColor(resources.getColor(R.color.colorOffline))
+                        pm25.text = "-- ug/m³"
+                    } else {
+                        air_connect.text = getString(R.string.home_online)
+                        air_connect.setTextColor(resources.getColor(R.color.colorOnline))
+                        pm25.text = String.format("%d ug/m³", data.Gas.PM25)
+                    }
+                }
+                if (data.Alerts?.isEmpty()) {
+                    updateList(listOf(Alert("No Alerts", "", -1)))
+                } else {
+                    if (data.Alerts?.size != alertLastCount) {
+                        updateList(data.Alerts.reversed())
+                        alertLastCount = data.Alerts.size
+                    }
+                }
+            }
+        })
+
+        wsManager.startConnect()
+
+        /*client.newWebSocket(request, object : WebSocketListener() {
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
                 println("Failure")
@@ -119,17 +200,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-        })
-    }
-
-    var alertLastCount: Int = 0
+        })*/
 
 
-    fun updateList(itemList: List<Alert>) {
-        runOnUiThread{
-            alerts_list?.adapter = ListAdapter(this, itemList)
-            alerts_list?.layoutManager = LinearLayoutManager(this)
-        }
+
+
     }
 }
 
